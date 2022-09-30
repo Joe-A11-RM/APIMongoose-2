@@ -1,0 +1,11 @@
+const express = require('express')
+const router = express.Router()
+const usercontrol = require('../Controller/user.control')
+const userauth = require('../Middleware/user.auth')
+router.post('/add', usercontrol.addUser)
+router.post('/check/:id', usercontrol.changestatus)
+router.put('/update/:name', usercontrol.updateUser)
+router.delete('/delete/:id', usercontrol.deleteUser)
+router.get('/find/:id', userauth, usercontrol.findUser)
+router.post('/login', usercontrol.login)
+module.exports = router

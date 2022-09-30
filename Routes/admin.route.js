@@ -1,0 +1,12 @@
+const express = require('express')
+const router = express.Router()
+const admincontrol = require('../Controller/admin.control')
+const adminauth = require('../Middleware/admin.auth')
+router.post('/add', admincontrol.addadmin)
+router.post('/login', admincontrol.loginadmin)
+router.post('/addproduct', admincontrol.addproduct)
+router.put('/update/:id', admincontrol.updateproduct)
+router.delete('/delete/:id', admincontrol.deleteproduct)
+router.put('/update/user/:id', admincontrol.updateuser)
+router.delete('/delete/user/:id', admincontrol.deleteuser)
+module.exports = router
