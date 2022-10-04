@@ -1,5 +1,9 @@
 const usermodel = require("../Models/user.model")
 const bcrypt = require("bcrypt")
+const fs = require('fs')
+const { promisify } = require('util')
+const unlinkAsync = promisify(fs.unlink)
+const path = require('path')
 const now = new Date()
 const validationhours = 0.3
 class UserController {
@@ -8,7 +12,11 @@ class UserController {
             let msg = await new usermodel({
                 name: req.body.name,
                 email: req.body.email,
-                password: req.body.password
+                password: req.body.password,
+                //image informations
+                fileName: req.file.originalname,
+                filePath: req.file.path,
+                fileType: req.file.mimetype
             })
             msg.CreatePin()
             msg.SendEmail(msg.pincode)
@@ -65,13 +73,30 @@ class UserController {
             })
         }
     }
-    static updateUser = async(req, res) => {
+    static updateUserImage = async(req, res) => {
         try {
             let updateitem = await usermodel.findOneAndUpdate({
-                    name: req.params.name
-                },
-                req.body
+                    _id: req.params.id
+                }, {
+                    fileName: req.file.originalname,
+                    filePath: req.file.path,
+                    fileType: req.file.mimetype
+                }
+                //req.body
             )
+            console.log(updateitem.fileName)
+            console.log(req.file.originalname)
+            if (updateitem.fileName != req.file.originalname) {
+                const root = `uploads/${updateitem.fileName}`
+                fs.unlink(root, (err) => {
+                    console.log(err)
+                })
+
+                console.log("not same")
+            } else {
+                console.log("same")
+            }
+            await updateitem.save()
             res.send(updateitem)
         } catch (error) {
             res.send({
@@ -80,7 +105,20 @@ class UserController {
             })
         }
     }
-
+    static updateUserInformation = async(req, res) => {
+        try {
+            let updateitem = await usermodel.findOneAndUpdate({
+                _id: req.params.id
+            }, req.body)
+            await updateitem.save()
+            res.send(updateitem)
+        } catch (error) {
+            res.send({
+                apiStatus: false,
+                message: error.message
+            })
+        }
+    }
     static deleteUser = async(req, res) => {
         try {
             let deleteditem = await usermodel.findOneAndDelete({

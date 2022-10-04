@@ -3,6 +3,7 @@ let emailvalidator = require('validator')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 var nodemail = require("nodemailer")
+var multer = require('multer')
 const user = mongoose.Schema({
     name: {
         type: String,
@@ -44,6 +45,18 @@ const user = mongoose.Schema({
     },
     updatedAt: {
         type: Date
+    },
+    fileName: {
+        type: String,
+        required: true
+    },
+    filePath: {
+        type: String,
+        required: true
+    },
+    fileType: {
+        type: String,
+        required: true
     }
 })
 user.pre('save', async function() {
@@ -98,4 +111,5 @@ user.methods.CheckActivity = async function() {
         console.log("Your Mail is active")
     }
 }
+
 module.exports = mongoose.model('User', user)
