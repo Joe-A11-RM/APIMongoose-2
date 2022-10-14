@@ -10,4 +10,8 @@ router.put('/update/inf/:id', usercontrol.updateUserInformation)
 router.delete('/delete/:id', usercontrol.deleteUser)
 router.get('/find/:id', userauth, usercontrol.findUser)
 router.post('/login', usercontrol.login)
+router.post('/addtocart', userauth, usercontrol.AddtoCart)
+router.post('/deletefromcart', userauth, usercontrol.DeletefromCart)
+router.post('/placeorder', userauth, usercontrol.PlaceOrder)
+router.get('/showcart', usercontrol.ShowCart)
 module.exports = router

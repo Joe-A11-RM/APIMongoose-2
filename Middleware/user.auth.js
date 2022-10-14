@@ -4,9 +4,10 @@ const userAuth = async(req, res, next) => {
     try {
         const givenToken = req.header("Authorization").replace("Bearer ", "")
         const token = jwt.verify(givenToken, "random")
-        console.log(token)
+            //console.log(token)
         const user = await usermodel.findById(token.id)
-        console.log(user)
+        req.user = user
+            //console.log(user)
         if (!user.role == "User") {
             throw new Error("Not User")
         }
